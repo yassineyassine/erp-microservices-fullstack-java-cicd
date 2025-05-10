@@ -1,0 +1,26 @@
+name: common-service
+version: 1.0.0
+appVersion: 1.0.0
+description: JHipster common cross cutting services
+icon: https://www.jhipster.tech/images/logo/logo-jhipster-drink-coffee.svg
+keywords:
+- search
+- messaging
+- monitor
+- telemetry
+- tracing
+home: https://www.jhipster.tech/
+sources:
+- https://github.com/jhipster/generator-jhipster.git
+maintainers:
+- name: Team JHipster
+  email:
+dependencies:
+- name: prometheus
+  version: ^9.2.0
+  repository: https://prometheus-community.github.io/helm-charts
+  condition: prometheus.enabled
+- name: grafana
+  version: ^4.0.0
+  repository: https://grafana.github.io/helm-charts
+  condition: prometheus.enabled

@@ -1,0 +1,18 @@
+name: notification
+version: 1.0.0
+appVersion: 1.0.0
+description: notification is a JHipster based microservice application
+icon: https://www.jhipster.tech/images/logo/logo-jhipster-drink-coffee.svg
+keywords:
+- spring
+- angular
+- react
+- JHipster
+- notification
+home: https://www.jhipster.tech/
+sources:
+- https://github.com/jhipster/generator-jhipster.git
+maintainers:
+- name: Team JHipster
+  email:
+dependencies:
