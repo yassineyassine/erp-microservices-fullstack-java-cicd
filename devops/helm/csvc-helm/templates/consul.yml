@@ -19,7 +19,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: gossip-key
-  namespace: erp1
+  namespace: erp
 type: Opaque
 data:
   gossip-key: SUcwRzF3N2c4QW5YMDA3cUEwWElqMTJG # a 24 chars base64 encoded string
@@ -28,7 +28,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: consul-headless
-  namespace: erp1
+  namespace: erp
   labels:
     app.kubernetes.io/name: consul
     app: consul
@@ -63,7 +63,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: consul-ui
-  namespace: erp1
+  namespace: erp
   labels:
     app.kubernetes.io/name: consul
     app: consul
@@ -82,7 +82,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: consul
-  namespace: erp1
+  namespace: erp
   labels:
     app.kubernetes.io/name: consul
     app: consul
@@ -112,7 +112,7 @@ spec:
                     app.kubernetes.io/name: consul
                     app: consul
                 namespaces:
-                  - erp1
+                  - erp
                 topologyKey: kubernetes.io/hostname
               weight: 1
         nodeAffinity:
@@ -157,7 +157,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: CONSUL_RETRY_JOIN
-              value: "consul-headless.erp1.svc.cluster.local"
+              value: "consul-headless.erp.svc.cluster.local"
             - name: CONSUL_DISABLE_KEYRING_FILE
               value: "true"
             - name: CONSUL_BOOTSTRAP_EXPECT

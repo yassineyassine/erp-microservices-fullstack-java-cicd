@@ -14,7 +14,7 @@ grafana:
   ingress:
     enabled: true
     hosts:
-    - jhipster-grafana.erp1.127.0.0.1.nip.io
+    - jhipster-grafana.erp.127.0.0.1.nip.io
   datasources:
     datasources.yaml:
       apiVersion: 1
