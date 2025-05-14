@@ -1,11 +1,11 @@
 store:
   replicaCount: 1
   image:
-    repository: 192.168.1.22:5003/store
+    repository: 192.168.1.23:5003/store
     tag: latest
 
 product:
-  replicaCount: 2
+  replicaCount: 1
   image:
-    repository: 192.168.1.22:5003/product
+    repository: 192.168.1.23:5003/product
     tag: latest
