@@ -1,0 +1,21 @@
+apiVersion: skaffold/v1
+kind: Config
+build:
+  artifacts:
+    - image: yassine2912/store
+      context: ../store
+      jib: {}
+    - image: yassine2912/invoice
+      context: ../invoice
+      jib: {}
+    - image: yassine2912/notification
+      context: ../notification
+      jib: {}
+    - image: yassine2912/product
+      context: ../product
+      jib: {}
+  tagPolicy:
+    envTemplate:
+      template: "{{.IMAGE_NAME}}:latest"
+deploy:
+  kustomize: {}

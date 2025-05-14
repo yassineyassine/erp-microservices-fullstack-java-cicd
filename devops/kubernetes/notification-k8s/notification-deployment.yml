@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+  namespace: jhipster
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+      version: "v1"
+  template:
+    metadata:
+      labels:
+        app: notification
+        version: "v1"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - notification
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      initContainers:
+        - name: init-ds
+          image: busybox:latest
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              while true
+              do
+                if [ $? -eq 0 ]; then
+                  echo "DB is UP"
+                  break
+                fi
+                echo "DB is not yet reachable;sleep for 10s before retry"
+                sleep 10
+              done
+      containers:
+        - name: notification-app
+          image: yassine2912/notification
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_CLOUD_CONSUL_HOST
+              value: consul-headless.jhipster.svc.cluster.local
+            - name: SPRING_CLOUD_CONSUL_PORT
+              value: "8500"
+            - name: SPRING_ELASTICSEARCH_REST_URIS
+              value: http://notification-elasticsearch.jhipster.svc.cluster.local:9200
+            - name: MANAGEMENT_TRACING_BAGGAGE_REMOTE_FIELDS
+              value: "x-request-id,x-ot-span-context"
+            - name: JAVA_OPTS
+              value: " -Xmx256m -Xms256m"
+            - name: SERVER_SHUTDOWN
+              value: graceful
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+          ports:
+            - name: http
+              containerPort: 8083
+          readinessProbe:
+            httpGet:
+              path: /management/health/readiness
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /management/health/liveness
+              port: http
+            initialDelaySeconds: 120
