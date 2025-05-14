@@ -4,4 +4,4 @@ mysql:
   mysqlAllowEmptyPassword: true
   initializationFiles:
     grant.sql: |-
-      grant all privileges on *.* to root@'%' identified by '' with grant option;S
+      grant all privileges on *.* to root@'%' identified by '' with grant option;

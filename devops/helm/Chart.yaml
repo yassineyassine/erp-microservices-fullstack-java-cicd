@@ -18,7 +18,7 @@ maintainers:
 dependencies:
   - name: store
     version: 0.1.0
-    repository: "file://store-helm"
-  - name: microservice-b
+    repository: "https://github.com/yassineyassine/erp-microservices-fullstack-java-cicd.git/store-helm"
+  - name: product
     version: 0.1.0
-    repository: "file://product-helm"
+    repository: "https://github.com/yassineyassine/erp-microservices-fullstack-java-cicd.git/store-hel/product-helm"
