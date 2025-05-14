@@ -1,0 +1,24 @@
+name: umbrella
+version: 1.0.0
+appVersion: 1.0.0
+description: product is a JHipster based microservice application
+icon: https://www.jhipster.tech/images/logo/logo-jhipster-drink-coffee.svg
+keywords:
+- spring
+- angular
+- react
+- JHipster
+- product
+home: https://www.jhipster.tech/
+sources:
+- https://github.com/jhipster/generator-jhipster.git
+maintainers:
+- name: Team JHipster
+  email:
+dependencies:
+  - name: store
+    version: 0.1.0
+    repository: "file://store-helm"
+  - name: microservice-b
+    version: 0.1.0
+    repository: "file://product-helm"
