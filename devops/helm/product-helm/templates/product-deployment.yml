@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: product
-  namespace: erp1
+  namespace: erp
 spec:
   replicas: 1
   selector:
