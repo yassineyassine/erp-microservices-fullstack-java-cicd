@@ -3,9 +3,13 @@ store:
   image:
     repository: 192.168.1.23:5003/store
     tag: latest
+    pullSecrets:
+    - name: regcred
 
 product:
   replicaCount: 1
   image:
     repository: 192.168.1.23:5003/product
     tag: latest
+    pullSecrets:
+    - name: regcred
