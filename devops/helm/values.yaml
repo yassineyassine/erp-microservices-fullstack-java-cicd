@@ -8,4 +8,4 @@ product:
   replicaCount: 2
   image:
     repository: 192.168.1.22:5003/product
-    tag: "f681f294"
+    tag: latest
