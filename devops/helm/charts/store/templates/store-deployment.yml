@@ -17,6 +17,10 @@ spec:
     spec:
       imagePullSecrets:
         - name: nexus-secret
+            {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.image.pullSecrets | nindent 8 }}
+      {{- end }}  
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
