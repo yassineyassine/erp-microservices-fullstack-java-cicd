@@ -16,7 +16,7 @@ spec:
         version: "v1"
     spec:
     imagePullSecrets:
-        {{- toYaml .Values.image.pullSecrets | nindent 8 }}
+        {{- toYaml .Values.image.pullSecrets | nindent 4 }}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
