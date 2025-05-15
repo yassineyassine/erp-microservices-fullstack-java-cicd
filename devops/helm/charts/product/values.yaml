@@ -1,6 +1,6 @@
 mysql:
   enabled: true
-  mysqlDatabase: product
+  mysqlDatabase: product-mysql
   mysqlAllowEmptyPassword: true
   initializationFiles:
     grant.sql: |-
