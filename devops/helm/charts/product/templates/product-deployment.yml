@@ -42,7 +42,7 @@ spec:
             - |
               while true
               do
-                rt=$(nc -z -w 1 product-mysql 3306)
+                rt=$(nc -z -w 1 product 3306)
                 if [ $? -eq 0 ]; then
                   echo "DB is UP"
                   break
