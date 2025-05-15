@@ -5,3 +5,6 @@ mysql:
   initializationFiles:
     grant.sql: |-
       grant all privileges on *.* to root@'%' identified by '' with grant option;
+database:
+  host: product-mysql
+  port: 3306      
