@@ -53,6 +53,7 @@ spec:
       containers:
         - name: store
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: IfNotPresent
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
