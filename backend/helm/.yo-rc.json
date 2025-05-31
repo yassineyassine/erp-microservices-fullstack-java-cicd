@@ -1,0 +1,19 @@
+{
+  "generator-jhipster": {
+    "appsFolders": ["product", "store"],
+    "dbRandomPassword": "fae51837d58a006be24b2957094ee41960933eba99d3475129f23b62240b",
+    "deploymentApplicationType": "microservice",
+    "directoryPath": "../",
+    "dockerPushCommand": "docker push",
+    "dockerRepositoryName": "192.168.1.23:5003",
+    "ingressDomain": "127.0.0.1.nip.io",
+    "ingressType": "nginx",
+    "istio": false,
+    "jhipsterVersion": "8.10.0",
+    "jwtSecretKey": "NjViZmRhOThlMDljZmEyZTRlODc4NDNjNzA0MmFlMjhmMWI1NGY3OWQ3NjkzMDc2Yjg5N2E0Y2UwYWFmMDU4NjljNjBkNGIwOTkyY2I5ODczNjljZDVhNGYyMDQ0ODdiNDk0MQ==",
+    "kubernetesNamespace": "erp",
+    "kubernetesServiceType": "Ingress",
+    "monitoring": "prometheus",
+    "serviceDiscoveryType": "consul"
+  }
+}
