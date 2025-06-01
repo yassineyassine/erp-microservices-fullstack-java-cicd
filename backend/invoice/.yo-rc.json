@@ -1,0 +1,24 @@
+{
+  "generator-jhipster": {
+    "applicationIndex": 3,
+    "applicationType": "microservice",
+    "authenticationType": "jwt",
+    "baseName": "invoice",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": true,
+    "entities": ["Invoice", "Shipment"],
+    "jhipsterVersion": "8.10.0",
+    "jwtSecretKey": "M2I3OTRjNzk1Yzc2Mjg4NDdlZjcyODRlMDQ0OTI2YzU2ZDUyOWJmYTI1OWU4YTFjYWZhOWZkYzNhMDJjMDIzMDRiZDczNzlhMmU3M2Y2Y2I5MGFkYzc0ZWVhMDBhMmNhNThjYmE0ZWMyMjA0YjNhMDdjZDU2NTVkNDk4OWQyYzQ=",
+    "languages": ["en"],
+    "lastLiquibaseTimestamp": 1746482361000,
+    "nativeLanguage": "en",
+    "packageName": "com.soft.erp.invoice",
+    "prodDatabaseType": "mysql",
+    "reactive": true,
+    "searchEngine": "elasticsearch",
+    "serverPort": "8082",
+    "serviceDiscoveryType": "consul",
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}
