@@ -1,0 +1,65 @@
+{
+  "annotations": {
+    "changelogDate": "20250505215821"
+  },
+  "applications": ["store", "webapp"],
+  "databaseType": "sql",
+  "documentation": "Entities for Store Gateway",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "firstName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "32"
+    },
+    {
+      "fieldName": "lastName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "32"
+    },
+    {
+      "fieldName": "gender",
+      "fieldType": "Gender",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "MALE,FEMALE,OTHER"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "pattern"],
+      "fieldValidateRulesPattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+    },
+    {
+      "fieldName": "phone",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "addressLine1",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "addressLine2",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "city",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "32"
+    },
+    {
+      "fieldName": "country",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "Customer",
+  "pagination": "pagination",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

@@ -1,0 +1,39 @@
+{
+  "generator-jhipster": {
+    "applicationIndex": 0,
+    "applicationType": "gateway",
+    "applications": {
+      "invoice": {
+        "applicationIndex": 3,
+        "serverPort": "8082"
+      },
+      "notification": {
+        "applicationIndex": 4,
+        "serverPort": "8083"
+      },
+      "product": {
+        "applicationIndex": 2,
+        "serverPort": "8081"
+      }
+    },
+    "authenticationType": "jwt",
+    "baseName": "store",
+    "buildTool": "maven",
+    "cacheProvider": "no",
+    "clientFramework": "angular",
+    "creationTimestamp": 1746743742421,
+    "enableSwaggerCodegen": true,
+    "entities": ["Customer", "Product", "ProductCategory", "ProductOrder", "OrderItem", "Invoice", "Shipment", "Notification"],
+    "jhipsterVersion": "8.10.0",
+    "jwtSecretKey": "MTM4NjEwZWIwNTQ4MzUxZjJiMjhkYTJmMmJkODM1MTZkMmVjYTIzOTVjZTNmMjVmMTBlNGEwYzFmNWNlZmQ5MjAxNjkyYzgyNWY1YzFlNGNkYzQzODNmMjBkMTY1ZGVjNWNhODExMmE0ZjI0NjhmNDk1YTJhMjkxYmRkNTZiNTc=",
+    "languages": ["en"],
+    "lastLiquibaseTimestamp": 1746482721000,
+    "nativeLanguage": "en",
+    "packageName": "com.soft.erp.store",
+    "prodDatabaseType": "mysql",
+    "reactive": true,
+    "serverPort": 8080,
+    "serviceDiscoveryType": "consul",
+    "skipClient": true
+  }
+}

@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.playtika.reactivefeign</groupId>
+    <artifactId>feign-reactor</artifactId>
+    <version>4.2.1</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>feign-reactor-core</module>
+        <module>feign-reactor-webclient-core</module>
+        <module>feign-reactor-webclient</module>
+        <module>feign-reactor-webclient-jetty</module>
+        <module>feign-reactor-webclient-apache-client5</module>
+        <module>feign-reactor-cloud</module>
+        <module>feign-reactor-rx2</module>
+        <module>feign-reactor-rx3</module>
+        <module>feign-reactor-jetty</module>
+        <module>feign-reactor-java11</module>
+        <module>feign-reactor-benchmarks</module>
+        <module>feign-reactor-spring-configuration</module>
+        <module>feign-reactor-test</module>
+        <module>feign-reactor-bom</module>
+        <module>feign-reactor-spring-cloud-starter</module>
+        <module>feign-reactor-parent</module>
+    </modules>
+
+    <name>feign-reactive</name>
+    <description>Use Feign client on WebClient</description>
+    <url>https://github.com/PlaytikaOSS/feign-reactive</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/PlaytikaOSS/feign-reactive</url>
+        <connection>scm:git:git://github.com/PlaytikaOSS/feign-reactive.git</connection>
+        <developerConnection>scm:git:git@github.com:PlaytikaOSS/feign-reactive.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <properties>
+        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+        <maven-gpg-plugin.version>3.2.5</maven-gpg-plugin.version>
+    </properties>
+
+    <developers>
+        <developer>
+            <id>kptfh</id>
+            <name>Sergii Karpenko</name>
+            <email>sergey.karpenko@gmail.com</email>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>ossrh</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>${nexus-staging-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

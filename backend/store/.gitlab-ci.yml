@@ -1,0 +1,152 @@
+image: jhipster/jhipster:v8.10.0
+
+variables:
+  PROJECT_NAME: store
+
+cache:
+  key: '$CI_COMMIT_REF_NAME'
+  paths:
+    - .maven/
+
+before_script:
+  - export MAVEN_USER_HOME=`pwd`/.maven
+  - git config --global --add safe.directory /builds/groupedev/store
+  - git remote set-url origin http://172.21.234.103:8929/root/store.git
+
+stages:
+  - check
+  - build
+  - test
+  - analyze
+  - package
+  - deploy-maven
+  - deploy-nexus
+  - deploy-store
+
+nohttp:
+  stage: check
+  tags:
+    - docker
+  script:
+    - git remote set-url origin http://172.21.234.103:8929/root/store.git
+    - git config --global --add safe.directory /builds/root/store
+    - bash ./mvnw -ntp checkstyle:check -Dmaven.repo.local=$MAVEN_USER_HOME
+  when: manual
+
+maven-compile:
+  stage: build
+  script:
+    - bash ./mvnw -ntp compile -P-store -Dmaven.repo.local=$MAVEN_USER_HOME
+  artifacts:
+    paths:
+      - target/classes/
+      - target/generated-sources/
+    expire_in: 1 day
+  when: manual
+
+maven-test:
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: 'tcp://docker:2375'
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ''
+  stage: test
+  script:
+    - bash ./mvnw -ntp verify -P-store -Dmaven.repo.local=$MAVEN_USER_HOME
+  artifacts:
+    reports:
+      junit:
+        - target/surefire-reports/TEST-*.xml
+        - target/failsafe-reports/TEST-*.xml
+    paths:
+      - target/surefire-reports
+      - target/failsafe-reports
+      - target/site
+    expire_in: 1 day
+  when: manual
+
+sonar-analyze:
+  stage: analyze
+  image: maven:3.9.4-eclipse-temurin-21
+  script:
+    - mvn org.jacoco:jacoco-maven-plugin:prepare-agent initialize sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.gitlab.project_id=$CI_PROJECT_PATH -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA -Dsonar.gitlab.failure_notification_mode=exit-code -Dmaven.repo.local=${MAVEN_USER_HOME}
+
+  when: manual
+  allow_failure: true
+
+maven-package:
+  stage: package
+  script:
+    - bash ./mvnw -ntp package -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
+  artifacts:
+    paths:
+      - target/*.jar
+      - target/classes
+    expire_in: 1 day
+  when: manual
+
+maven-deploy:
+  stage: deploy-maven
+  image: maven:3.9.4-eclipse-temurin-21
+  script:
+    - echo "Setting up Maven settings for Nexus"
+    - mkdir -p $MAVEN_USER_HOME
+    - bash ./mvnw -ntp deploy -Pprod -s ./settings.xml -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
+  when: manual
+  dependencies:
+    - maven-package
+  only:
+    - dev
+deploy-nexus:
+  stage: deploy-nexus
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_TLS_CERTDIR: ""
+    MAVEN_USER_HOME: "$CI_PROJECT_DIR/.maven"
+  before_script:
+    - apk add --no-cache bash openjdk17 maven git  # Installe bash, Java et Maven
+    - git config --global --add safe.directory "$CI_PROJECT_DIR"
+    - chmod +x ./mvnw
+  script:
+    - export PROJECT_VERSION=$(./mvnw -ntp help:evaluate -Dexpression=project.version -q -DforceStdout)
+    - ./mvnw -ntp clean package -Pprod -Dmaven.repo.local=$MAVEN_USER_HOME
+    - docker build -t store:$PROJECT_VERSION .
+    - docker tag store:$PROJECT_VERSION $NEXUS_HOST_URL/store:$PROJECT_VERSION
+    - docker tag store:$PROJECT_VERSION $NEXUS_HOST_URL/store:latest
+    - docker push $NEXUS_HOST_URL/store:$PROJECT_VERSION
+    - docker push $NEXUS_HOST_URL/store:latest
+
+
+  dependencies:
+    - maven-package
+  when: manual
+  only:
+    - dev
+
+deploy-store:
+  stage: deploy-store
+  image: alpine/helm:3.12.0
+  when: manual
+  only:
+    - dev
+  variables:
+    HELM_HOME: /root/.helm
+  before_script:
+    - apk add --no-cache git curl bash kubectl
+    - git clone https://oauth2:$CI_JOB_TOKEN@172.21.234.103:8929/groupedev/helm.git
+    - echo "$K8S_TOKEN" > token.txt
+    - kubectl config set-cluster k3s --server=$K8S_API_SERVER --insecure-skip-tls-verify=true
+    - kubectl config set-credentials gitlab --token=$(cat token.txt)
+    - kubectl config set-context default --cluster=k3s --user=gitlab --namespace=$K8S_NAMESPACE
+    - kubectl config use-context default
+    - helm dependency update ./helm/charts/store || true
+  script:
+    - helm upgrade --install store-service ./helm/charts/store \
+      --namespace $K8S_NAMESPACE \
+      --atomic \
+      --set image.repository=$NEXUS_HOST_URL \
+      --set image.tag=store

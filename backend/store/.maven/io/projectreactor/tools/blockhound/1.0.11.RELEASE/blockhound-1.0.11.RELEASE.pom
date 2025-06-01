@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.projectreactor.tools</groupId>
+  <artifactId>blockhound</artifactId>
+  <version>1.0.11.RELEASE</version>
+  <name>BlockHound Java Agent</name>
+  <description>Java agent to detect blocking calls from non-blocking threads.</description>
+  <url>https://github.com/reactor/BlockHound</url>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>simonbasle</id>
+      <name>Simon Baslé</name>
+      <email>sbasle@vmware.com</email>
+    </developer>
+    <developer>
+      <id>bsideup</id>
+      <name>Sergei Egorov</name>
+      <email>bsideup@gmail.com</email>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git://github.com/reactor/BlockHound.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/reactor/BlockHound.git</developerConnection>
+    <url>https://github.com/reactor/BlockHound/</url>
+  </scm>
+</project>

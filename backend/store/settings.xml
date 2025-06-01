@@ -1,0 +1,9 @@
+<settings>
+  <servers>
+    <server>
+      <id>artifactory-snapshots</id>
+      <username>admin</username>
+      <password>admin</password>
+    </server>
+  </servers>
+</settings>

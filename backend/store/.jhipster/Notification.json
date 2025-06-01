@@ -1,0 +1,47 @@
+{
+  "annotations": {
+    "changelogDate": "20250505220521"
+  },
+  "applications": ["store", "webapp", "notification"],
+  "clientRootFolder": "notification",
+  "databaseType": "sql",
+  "documentation": "Entities for notification microservice",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "date",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "details",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sentDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "format",
+      "fieldType": "NotificationType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "EMAIL,SMS,PARCEL"
+    },
+    {
+      "fieldName": "userId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "productId",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "microserviceName": "notification",
+  "name": "Notification",
+  "relationships": [],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}
