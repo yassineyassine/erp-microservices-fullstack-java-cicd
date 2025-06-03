@@ -2,26 +2,25 @@ image: jhipster/jhipster:v8.10.0
 
 variables:
   PROJECT_NAME: store
+  IMAGE_NAME: "store"
 
 cache:
   key: '$CI_COMMIT_REF_NAME'
   paths:
     - .maven/
 
-before_script:
-  - export MAVEN_USER_HOME=`pwd`/.maven
-  - git config --global --add safe.directory /builds/groupedev/store
-  - git remote set-url origin http://172.21.234.103:8929/root/store.git
+
 
 stages:
   - check
-  - build
   - test
   - analyze
-  - package
-  - deploy-maven
+  - build
   - deploy-nexus
   - deploy-store
+
+
+
 
 nohttp:
   stage: check
@@ -33,16 +32,6 @@ nohttp:
     - bash ./mvnw -ntp checkstyle:check -Dmaven.repo.local=$MAVEN_USER_HOME
   when: manual
 
-maven-compile:
-  stage: build
-  script:
-    - bash ./mvnw -ntp compile -P-store -Dmaven.repo.local=$MAVEN_USER_HOME
-  artifacts:
-    paths:
-      - target/classes/
-      - target/generated-sources/
-    expire_in: 1 day
-  when: manual
 
 maven-test:
   services:
@@ -75,57 +64,47 @@ sonar-analyze:
   when: manual
   allow_failure: true
 
-maven-package:
-  stage: package
+
+# Étape 1 : Build Java
+build-app:
+  stage: build
+  image: maven:3.9-eclipse-temurin-17
+  variables:
+    MAVEN_USER_HOME: "$CI_PROJECT_DIR/.maven"
   script:
-    - bash ./mvnw -ntp package -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
+    - bash ./mvnw -ntp clean package -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
+    - export PROJECT_VERSION=$(./mvnw -ntp help:evaluate -Dexpression=project.version -q -DforceStdout)
+    - echo $PROJECT_VERSION > project-version.txt
   artifacts:
     paths:
-      - target/*.jar
-      - target/classes
-    expire_in: 1 day
+      - target/
+      - project-version.txt
+      - Dockerfile
   when: manual
-
-maven-deploy:
-  stage: deploy-maven
-  image: maven:3.9.4-eclipse-temurin-21
-  script:
-    - echo "Setting up Maven settings for Nexus"
-    - mkdir -p $MAVEN_USER_HOME
-    - bash ./mvnw -ntp deploy -Pprod -s ./settings.xml -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
-  when: manual
-  dependencies:
-    - maven-package
-  only:
-    - dev
+      
 deploy-nexus:
   stage: deploy-nexus
-  image: docker:latest
-  services:
-    - docker:dind
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
+
   variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_TLS_CERTDIR: ""
-    MAVEN_USER_HOME: "$CI_PROJECT_DIR/.maven"
-  before_script:
-    - apk add --no-cache bash openjdk17 maven git  # Installe bash, Java et Maven
-    - git config --global --add safe.directory "$CI_PROJECT_DIR"
-    - chmod +x ./mvnw
+    DOCKER_CONFIG: "/kaniko/.docker/"
+    IMAGE_NAME: "store"
+    NEXUS_HOST_URL: "$NEXUS_HOST_URL"
+
   script:
-    - export PROJECT_VERSION=$(./mvnw -ntp help:evaluate -Dexpression=project.version -q -DforceStdout)
-    - ./mvnw -ntp clean package -Pprod -Dmaven.repo.local=$MAVEN_USER_HOME
-    - docker build -t store:$PROJECT_VERSION .
-    - docker tag store:$PROJECT_VERSION $NEXUS_HOST_URL/store:$PROJECT_VERSION
-    - docker tag store:$PROJECT_VERSION $NEXUS_HOST_URL/store:latest
-    - docker push $NEXUS_HOST_URL/store:$PROJECT_VERSION
-    - docker push $NEXUS_HOST_URL/store:latest
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${NEXUS_HOST_URL}\":{\"username\":\"admin\",\"password\":\"admin\"}},\"insecure-registries\":[\"${NEXUS_HOST_URL}\"]}" > /kaniko/.docker/config.json
+    - cat /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination ${NEXUS_HOST_URL}/${IMAGE_NAME}:${CI_COMMIT_SHORT_SHA} --destination ${NEXUS_HOST_URL}/${IMAGE_NAME}:latest --insecure --skip-tls-verify
+  when: manual  
 
 
-  dependencies:
-    - maven-package
-  when: manual
-  only:
-    - dev
+
+
+
+
 
 deploy-store:
   stage: deploy-store
